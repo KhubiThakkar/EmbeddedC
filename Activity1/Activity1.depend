@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1619104221 source:d:\ltts\activity1\fuse.c
+	<avr/io.h>
+
+1619112175 source:d:\ltts\activity1\main.c
+	<avr/io.h>
+
