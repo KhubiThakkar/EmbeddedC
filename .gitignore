@@ -56,7 +56,6 @@ Mkfile.old
 dkms.conf
 
 # files to ignore
-bin/
 *.cbp
 *.depend
 *.layout
