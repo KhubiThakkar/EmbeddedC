@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<analyzerinfo checksum="1277523621">
-  <FileInfo check="CheckUnusedFunctions">
-    <functioncall functionName="EFUSE_DEFAULT"/>
-    <functioncall functionName="HFUSE_DEFAULT"/>
-    <functioncall functionName="LFUSE_DEFAULT"/>
-  </FileInfo>
-</analyzerinfo>

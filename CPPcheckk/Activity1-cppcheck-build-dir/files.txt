@@ -1,2 +1,0 @@
-fuse.a1::../Activity1/fuse.c
-main.a1::../Activity1/main.c
