@@ -15,7 +15,8 @@
 
 ## Final Intergated circuit
 
-* Design of Project
-![circuit](images\Design.png)
+* Design of Project  
+![circuit](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/Design.png)
+
 * Project in Action  
 ![final circuit](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/final.png)
