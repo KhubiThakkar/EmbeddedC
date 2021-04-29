@@ -6,19 +6,19 @@ Code Quality | Compling | Codacy
 
 ## Activity 1: GPIO INTERFACING
 
-#### Case 1: When Heater = 0 and Seat = 0  
+### Case 1: When Heater = 0 and Seat = 0  
 
 ![BOTH SWITCH ARE OFF](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/OFF-OFF.png)
 
-#### Case 2: When Heater = 0 and Seat = 1  
+### Case 2: When Heater = 0 and Seat = 1  
 
 ![ONE ON, ONE OFF](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/ON-OFF.png)
 
-#### Case 3: When Heater = 1 and Seat = 0  
+### Case 3: When Heater = 1 and Seat = 0  
 
 ![ONE OFF, ONE ON](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/OFF-ON.png)
 
-#### Case 4: When Heater = 1 and Seat = 1  
+### Case 4: When Heater = 1 and Seat = 1  
 
 ![BOTH SWITCH ARE ON](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/ON-ON.png)
 
@@ -36,10 +36,10 @@ Code Quality | Compling | Codacy
 
 ## Final Intergated circuit
 
-#### Design of Project  
+### Design of Project  
 
 ![circuit](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/Design.png)
 
-#### Project in Action  
+### Project in Action  
 
 ![final circuit](https://github.com/KhubiThakkar/EmbeddedC/blob/master/images/final.png)
