@@ -1,0 +1,595 @@
+
+bin\Debug\EmbeddedC.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000002c0  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .fuse         00000003  00820000  00820000  00000334  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .debug_aranges 000000a0  00000000  00000000  00000337  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_pubnames 00000136  00000000  00000000  000003d7  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_info   00000586  00000000  00000000  0000050d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_abbrev 0000030c  00000000  00000000  00000a93  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_line   00000605  00000000  00000000  00000d9f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_frame  00000130  00000000  00000000  000013a4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_str    0000018a  00000000  00000000  000014d4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_loc    00000061  00000000  00000000  0000165e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 55 01 	call	0x2aa	; 0x2aa <main>
+  78:	0c 94 5e 01 	jmp	0x2bc	; 0x2bc <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <init_gpiopins>:
+/**
+ * @brief It will initialize the GPIO pins for heater and seat as inputs and
+ *  the indicator LED pin as output
+ */
+void init_gpiopins(void){
+    DDRD &= ~(1<<PD0);  // input switch
+  80:	50 98       	cbi	0x0a, 0	; 10
+    DDRD &= ~(1<<PD1);  // input switch
+  82:	51 98       	cbi	0x0a, 1	; 10
+    DDRB |= (1<<PB1);   // output switch
+  84:	21 9a       	sbi	0x04, 1	; 4
+}
+  86:	08 95       	ret
+
+00000088 <part1>:
+
+void part1(void){
+    // IF BOTH SWITCHES ARE ON
+    if(((PIND & (1<<PD0)) && (PIND & (1<<PD1))) == 1){
+  88:	48 9b       	sbis	0x09, 0	; 9
+  8a:	02 c0       	rjmp	.+4      	; 0x90 <part1+0x8>
+  8c:	49 99       	sbic	0x09, 1	; 9
+  8e:	02 c0       	rjmp	.+4      	; 0x94 <part1+0xc>
+        PORTB |= (1<<PB1);
+    }
+    else{
+        PORTB &= ~(1<<PB1);
+  90:	29 98       	cbi	0x05, 1	; 5
+  92:	08 95       	ret
+}
+
+void part1(void){
+    // IF BOTH SWITCHES ARE ON
+    if(((PIND & (1<<PD0)) && (PIND & (1<<PD1))) == 1){
+        PORTB |= (1<<PB1);
+  94:	29 9a       	sbi	0x05, 1	; 5
+  96:	08 95       	ret
+
+00000098 <init_ADC>:
+#include "activity2.h"
+#include "activity3.h"
+#include "activity4.h"
+
+void init_ADC(void)
+{   ADMUX=(1<<REFS0);
+  98:	80 e4       	ldi	r24, 0x40	; 64
+  9a:	80 93 7c 00 	sts	0x007C, r24
+    ADCSRA=(1<<ADEN)|(7<<ADPS0);
+  9e:	87 e8       	ldi	r24, 0x87	; 135
+  a0:	80 93 7a 00 	sts	0x007A, r24
+
+}
+  a4:	08 95       	ret
+
+000000a6 <ReadADC>:
+
+uint16_t ReadADC(uint8_t ch)
+{
+    //select adc channel
+    ADMUX &= 0xf8;
+  a6:	90 91 7c 00 	lds	r25, 0x007C
+  aa:	98 7f       	andi	r25, 0xF8	; 248
+  ac:	90 93 7c 00 	sts	0x007C, r25
+    ch=ch&0b00000111;
+    ADMUX |= ch;
+  b0:	90 91 7c 00 	lds	r25, 0x007C
+  b4:	87 70       	andi	r24, 0x07	; 7
+  b6:	89 2b       	or	r24, r25
+  b8:	80 93 7c 00 	sts	0x007C, r24
+    //Start conversion
+    ADCSRA |= (1<<ADSC);
+  bc:	80 91 7a 00 	lds	r24, 0x007A
+  c0:	80 64       	ori	r24, 0x40	; 64
+  c2:	80 93 7a 00 	sts	0x007A, r24
+    //wait for conversion
+    while(!(ADCSRA & (1<<ADIF)));
+  c6:	80 91 7a 00 	lds	r24, 0x007A
+  ca:	84 ff       	sbrs	r24, 4
+  cc:	fc cf       	rjmp	.-8      	; 0xc6 <ReadADC+0x20>
+    ADCSRA |= (1<<ADIF);
+  ce:	80 91 7a 00 	lds	r24, 0x007A
+  d2:	80 61       	ori	r24, 0x10	; 16
+  d4:	80 93 7a 00 	sts	0x007A, r24
+    return (ADC);
+  d8:	20 91 78 00 	lds	r18, 0x0078
+  dc:	30 91 79 00 	lds	r19, 0x0079
+
+}
+  e0:	c9 01       	movw	r24, r18
+  e2:	08 95       	ret
+
+000000e4 <init_ADCport>:
+
+void init_ADCport(void)
+{
+     DDRD &= ~(1<<PD0);     //Make PORTD0 as input pin
+  e4:	50 98       	cbi	0x0a, 0	; 10
+     DDRC &= ~(1<<PC0);     // Make PORTC0 as input pin
+  e6:	38 98       	cbi	0x07, 0	; 7
+     //DDRD |= (1<<PD6);      // set PD6 for output
+     DDRB |= (1<<PB1);      //Make PORTB1 as output pin
+  e8:	21 9a       	sbi	0x04, 1	; 4
+}
+  ea:	08 95       	ret
+
+000000ec <part2>:
+
+
+void part2(void){
+    init_PWM();
+  ec:	0e 94 b7 00 	call	0x16e	; 0x16e <init_PWM>
+#include "activity2.h"
+#include "activity3.h"
+#include "activity4.h"
+
+void init_ADC(void)
+{   ADMUX=(1<<REFS0);
+  f0:	80 e4       	ldi	r24, 0x40	; 64
+  f2:	80 93 7c 00 	sts	0x007C, r24
+    ADCSRA=(1<<ADEN)|(7<<ADPS0);
+  f6:	87 e8       	ldi	r24, 0x87	; 135
+  f8:	80 93 7a 00 	sts	0x007A, r24
+
+}
+
+void init_ADCport(void)
+{
+     DDRD &= ~(1<<PD0);     //Make PORTD0 as input pin
+  fc:	50 98       	cbi	0x0a, 0	; 10
+     DDRC &= ~(1<<PC0);     // Make PORTC0 as input pin
+  fe:	38 98       	cbi	0x07, 0	; 7
+     //DDRD |= (1<<PD6);      // set PD6 for output
+     DDRB |= (1<<PB1);      //Make PORTB1 as output pin
+ 100:	21 9a       	sbi	0x04, 1	; 4
+
+void part2(void){
+    init_PWM();
+    init_ADC();
+    init_ADCport();
+    init_PWMpin();
+ 102:	0e 94 be 00 	call	0x17c	; 0x17c <init_PWMpin>
+
+    PORTB = 0x00;
+ 106:	15 b8       	out	0x05, r1	; 5
+    if((PIND & (1<<PD0)) == 1 ){
+ 108:	48 99       	sbic	0x09, 0	; 9
+ 10a:	05 c0       	rjmp	.+10     	; 0x116 <part2+0x2a>
+        ReadADC(0);
+        compare();
+        _delay_ms(200);
+    }
+    else{
+        ADCH=0x00;
+ 10c:	10 92 79 00 	sts	0x0079, r1
+        ADCL=0x00;
+ 110:	10 92 78 00 	sts	0x0078, r1
+ 114:	08 95       	ret
+    init_ADCport();
+    init_PWMpin();
+
+    PORTB = 0x00;
+    if((PIND & (1<<PD0)) == 1 ){
+        PORTB |= (1<<PB1);
+ 116:	29 9a       	sbi	0x05, 1	; 5
+}
+
+uint16_t ReadADC(uint8_t ch)
+{
+    //select adc channel
+    ADMUX &= 0xf8;
+ 118:	80 91 7c 00 	lds	r24, 0x007C
+ 11c:	88 7f       	andi	r24, 0xF8	; 248
+ 11e:	80 93 7c 00 	sts	0x007C, r24
+    ch=ch&0b00000111;
+    ADMUX |= ch;
+ 122:	80 91 7c 00 	lds	r24, 0x007C
+ 126:	80 93 7c 00 	sts	0x007C, r24
+    //Start conversion
+    ADCSRA |= (1<<ADSC);
+ 12a:	80 91 7a 00 	lds	r24, 0x007A
+ 12e:	80 64       	ori	r24, 0x40	; 64
+ 130:	80 93 7a 00 	sts	0x007A, r24
+    //wait for conversion
+    while(!(ADCSRA & (1<<ADIF)));
+ 134:	80 91 7a 00 	lds	r24, 0x007A
+ 138:	84 ff       	sbrs	r24, 4
+ 13a:	fc cf       	rjmp	.-8      	; 0x134 <part2+0x48>
+    ADCSRA |= (1<<ADIF);
+ 13c:	80 91 7a 00 	lds	r24, 0x007A
+ 140:	80 61       	ori	r24, 0x10	; 16
+ 142:	80 93 7a 00 	sts	0x007A, r24
+    return (ADC);
+ 146:	80 91 78 00 	lds	r24, 0x0078
+ 14a:	90 91 79 00 	lds	r25, 0x0079
+
+    PORTB = 0x00;
+    if((PIND & (1<<PD0)) == 1 ){
+        PORTB |= (1<<PB1);
+        ReadADC(0);
+        compare();
+ 14e:	0e 94 c0 00 	call	0x180	; 0x180 <compare>
+ 152:	20 e0       	ldi	r18, 0x00	; 0
+ 154:	30 e0       	ldi	r19, 0x00	; 0
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+ 156:	40 e9       	ldi	r20, 0x90	; 144
+ 158:	51 e0       	ldi	r21, 0x01	; 1
+ 15a:	ca 01       	movw	r24, r20
+ 15c:	01 97       	sbiw	r24, 0x01	; 1
+ 15e:	f1 f7       	brne	.-4      	; 0x15c <part2+0x70>
+ 160:	2f 5f       	subi	r18, 0xFF	; 255
+ 162:	3f 4f       	sbci	r19, 0xFF	; 255
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 164:	87 e0       	ldi	r24, 0x07	; 7
+ 166:	20 3d       	cpi	r18, 0xD0	; 208
+ 168:	38 07       	cpc	r19, r24
+ 16a:	b9 f7       	brne	.-18     	; 0x15a <part2+0x6e>
+ 16c:	08 95       	ret
+
+0000016e <init_PWM>:
+#include "activity3.h"
+#include "activity4.h"
+
+
+void init_PWM(void){
+    TCCR0A |= (1<<COM0A1)|(1<<WGM01)|(1<<WGM00);
+ 16e:	84 b5       	in	r24, 0x24	; 36
+ 170:	83 68       	ori	r24, 0x83	; 131
+ 172:	84 bd       	out	0x24, r24	; 36
+    // Fast PWM - Non inverting mode of pin PD6
+    TCCR0B |= (1<<CS00);
+ 174:	85 b5       	in	r24, 0x25	; 37
+ 176:	81 60       	ori	r24, 0x01	; 1
+ 178:	85 bd       	out	0x25, r24	; 37
+    // no prescaler
+}
+ 17a:	08 95       	ret
+
+0000017c <init_PWMpin>:
+
+void init_PWMpin(void){
+    DDRD |= (1<<PD6);      // set PD6 for output
+ 17c:	56 9a       	sbi	0x0a, 6	; 10
+}
+ 17e:	08 95       	ret
+
+00000180 <compare>:
+
+void compare(void){
+    // changing the duty cycle of waveform
+    if (ADC>0 && ADC<200){
+ 180:	80 91 78 00 	lds	r24, 0x0078
+ 184:	90 91 79 00 	lds	r25, 0x0079
+ 188:	89 2b       	or	r24, r25
+ 18a:	39 f0       	breq	.+14     	; 0x19a <compare+0x1a>
+ 18c:	80 91 78 00 	lds	r24, 0x0078
+ 190:	90 91 79 00 	lds	r25, 0x0079
+ 194:	88 3c       	cpi	r24, 0xC8	; 200
+ 196:	91 05       	cpc	r25, r1
+ 198:	98 f1       	brcs	.+102    	; 0x200 <compare+0x80>
+        OCR0A = 51;
+    }
+    else if(ADC > 210 && ADC < 500){
+ 19a:	80 91 78 00 	lds	r24, 0x0078
+ 19e:	90 91 79 00 	lds	r25, 0x0079
+ 1a2:	83 3d       	cpi	r24, 0xD3	; 211
+ 1a4:	91 05       	cpc	r25, r1
+ 1a6:	c0 f4       	brcc	.+48     	; 0x1d8 <compare+0x58>
+        OCR0A = 101;
+    }
+    else if(ADC > 510 && ADC < 700){
+ 1a8:	80 91 78 00 	lds	r24, 0x0078
+ 1ac:	90 91 79 00 	lds	r25, 0x0079
+ 1b0:	8f 5f       	subi	r24, 0xFF	; 255
+ 1b2:	91 40       	sbci	r25, 0x01	; 1
+ 1b4:	d8 f4       	brcc	.+54     	; 0x1ec <compare+0x6c>
+        OCR0A = 178;
+    }
+    else if (ADC > 710 && ADC < 1024){
+ 1b6:	80 91 78 00 	lds	r24, 0x0078
+ 1ba:	90 91 79 00 	lds	r25, 0x0079
+ 1be:	87 5c       	subi	r24, 0xC7	; 199
+ 1c0:	92 40       	sbci	r25, 0x02	; 2
+ 1c2:	48 f0       	brcs	.+18     	; 0x1d6 <compare+0x56>
+ 1c4:	80 91 78 00 	lds	r24, 0x0078
+ 1c8:	90 91 79 00 	lds	r25, 0x0079
+ 1cc:	80 50       	subi	r24, 0x00	; 0
+ 1ce:	94 40       	sbci	r25, 0x04	; 4
+ 1d0:	10 f4       	brcc	.+4      	; 0x1d6 <compare+0x56>
+        OCR0A = 242;
+ 1d2:	82 ef       	ldi	r24, 0xF2	; 242
+ 1d4:	87 bd       	out	0x27, r24	; 39
+ 1d6:	08 95       	ret
+void compare(void){
+    // changing the duty cycle of waveform
+    if (ADC>0 && ADC<200){
+        OCR0A = 51;
+    }
+    else if(ADC > 210 && ADC < 500){
+ 1d8:	80 91 78 00 	lds	r24, 0x0078
+ 1dc:	90 91 79 00 	lds	r25, 0x0079
+ 1e0:	84 5f       	subi	r24, 0xF4	; 244
+ 1e2:	91 40       	sbci	r25, 0x01	; 1
+ 1e4:	08 f7       	brcc	.-62     	; 0x1a8 <compare+0x28>
+        OCR0A = 101;
+ 1e6:	85 e6       	ldi	r24, 0x65	; 101
+ 1e8:	87 bd       	out	0x27, r24	; 39
+ 1ea:	08 95       	ret
+    }
+    else if(ADC > 510 && ADC < 700){
+ 1ec:	80 91 78 00 	lds	r24, 0x0078
+ 1f0:	90 91 79 00 	lds	r25, 0x0079
+ 1f4:	8c 5b       	subi	r24, 0xBC	; 188
+ 1f6:	92 40       	sbci	r25, 0x02	; 2
+ 1f8:	f0 f6       	brcc	.-68     	; 0x1b6 <compare+0x36>
+        OCR0A = 178;
+ 1fa:	82 eb       	ldi	r24, 0xB2	; 178
+ 1fc:	87 bd       	out	0x27, r24	; 39
+ 1fe:	08 95       	ret
+}
+
+void compare(void){
+    // changing the duty cycle of waveform
+    if (ADC>0 && ADC<200){
+        OCR0A = 51;
+ 200:	83 e3       	ldi	r24, 0x33	; 51
+ 202:	87 bd       	out	0x27, r24	; 39
+ 204:	08 95       	ret
+
+00000206 <USARTInit>:
+#include "activity3.h"
+#include "activity4.h"
+
+void USARTInit(uint16_t ubrr_value)
+{
+    UBRR0H = (ubrr_value>>8) & 0x00ff;
+ 206:	90 93 c5 00 	sts	0x00C5, r25
+    UBRR0L = ubrr_value;
+ 20a:	80 93 c4 00 	sts	0x00C4, r24
+    UCSR0C = (1<<UMSEL00)|(1<<UCSZ01)|(1<<UCSZ00);
+ 20e:	86 e4       	ldi	r24, 0x46	; 70
+ 210:	80 93 c2 00 	sts	0x00C2, r24
+    UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0)|(1<<TXCIE0);
+ 214:	88 ed       	ldi	r24, 0xD8	; 216
+ 216:	80 93 c1 00 	sts	0x00C1, r24
+}
+ 21a:	08 95       	ret
+
+0000021c <USARTReadChar>:
+
+char USARTReadChar()
+{
+    while(!(UCSR0A & (1<<RXC0)))
+ 21c:	80 91 c0 00 	lds	r24, 0x00C0
+ 220:	87 ff       	sbrs	r24, 7
+ 222:	fc cf       	rjmp	.-8      	; 0x21c <USARTReadChar>
+    {
+      //do nothing
+    }
+    return UDR0;
+ 224:	80 91 c6 00 	lds	r24, 0x00C6
+}
+ 228:	08 95       	ret
+
+0000022a <USARTWriteChar>:
+
+void USARTWriteChar(char data)
+{
+ 22a:	98 2f       	mov	r25, r24
+    while(!(UCSR0A & (1<<UDRE0)))
+ 22c:	80 91 c0 00 	lds	r24, 0x00C0
+ 230:	85 ff       	sbrs	r24, 5
+ 232:	fc cf       	rjmp	.-8      	; 0x22c <USARTWriteChar+0x2>
+    {
+        //do nothing
+    }
+    UDR0 = data;
+ 234:	90 93 c6 00 	sts	0x00C6, r25
+}
+ 238:	08 95       	ret
+
+0000023a <part3>:
+#include "activity3.h"
+#include "activity4.h"
+
+void USARTInit(uint16_t ubrr_value)
+{
+    UBRR0H = (ubrr_value>>8) & 0x00ff;
+ 23a:	10 92 c5 00 	sts	0x00C5, r1
+    UBRR0L = ubrr_value;
+ 23e:	87 e6       	ldi	r24, 0x67	; 103
+ 240:	80 93 c4 00 	sts	0x00C4, r24
+    UCSR0C = (1<<UMSEL00)|(1<<UCSZ01)|(1<<UCSZ00);
+ 244:	86 e4       	ldi	r24, 0x46	; 70
+ 246:	80 93 c2 00 	sts	0x00C2, r24
+    UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0)|(1<<TXCIE0);
+ 24a:	88 ed       	ldi	r24, 0xD8	; 216
+ 24c:	80 93 c1 00 	sts	0x00C1, r24
+}
+
+void part3 (void)
+{
+    USARTInit(103);
+    if(OCR0A == 50)
+ 250:	87 b5       	in	r24, 0x27	; 39
+ 252:	82 33       	cpi	r24, 0x32	; 50
+ 254:	51 f0       	breq	.+20     	; 0x26a <part3+0x30>
+    {
+        USARTWriteChar(20);
+    }
+    else if(OCR0A == 101)
+ 256:	87 b5       	in	r24, 0x27	; 39
+ 258:	85 36       	cpi	r24, 0x65	; 101
+ 25a:	79 f0       	breq	.+30     	; 0x27a <part3+0x40>
+    {
+        USARTWriteChar(25);
+    }
+    else if(OCR0A == 178)
+ 25c:	87 b5       	in	r24, 0x27	; 39
+ 25e:	82 3b       	cpi	r24, 0xB2	; 178
+ 260:	a1 f0       	breq	.+40     	; 0x28a <part3+0x50>
+    {
+        USARTWriteChar(29);
+    }
+    else if(OCR0A == 242)
+ 262:	87 b5       	in	r24, 0x27	; 39
+ 264:	82 3f       	cpi	r24, 0xF2	; 242
+ 266:	c9 f0       	breq	.+50     	; 0x29a <part3+0x60>
+ 268:	08 95       	ret
+    return UDR0;
+}
+
+void USARTWriteChar(char data)
+{
+    while(!(UCSR0A & (1<<UDRE0)))
+ 26a:	80 91 c0 00 	lds	r24, 0x00C0
+ 26e:	85 ff       	sbrs	r24, 5
+ 270:	fc cf       	rjmp	.-8      	; 0x26a <part3+0x30>
+    {
+        //do nothing
+    }
+    UDR0 = data;
+ 272:	84 e1       	ldi	r24, 0x14	; 20
+ 274:	80 93 c6 00 	sts	0x00C6, r24
+ 278:	08 95       	ret
+    return UDR0;
+}
+
+void USARTWriteChar(char data)
+{
+    while(!(UCSR0A & (1<<UDRE0)))
+ 27a:	80 91 c0 00 	lds	r24, 0x00C0
+ 27e:	85 ff       	sbrs	r24, 5
+ 280:	fc cf       	rjmp	.-8      	; 0x27a <part3+0x40>
+    {
+        //do nothing
+    }
+    UDR0 = data;
+ 282:	89 e1       	ldi	r24, 0x19	; 25
+ 284:	80 93 c6 00 	sts	0x00C6, r24
+ 288:	08 95       	ret
+    return UDR0;
+}
+
+void USARTWriteChar(char data)
+{
+    while(!(UCSR0A & (1<<UDRE0)))
+ 28a:	80 91 c0 00 	lds	r24, 0x00C0
+ 28e:	85 ff       	sbrs	r24, 5
+ 290:	fc cf       	rjmp	.-8      	; 0x28a <part3+0x50>
+    {
+        //do nothing
+    }
+    UDR0 = data;
+ 292:	8d e1       	ldi	r24, 0x1D	; 29
+ 294:	80 93 c6 00 	sts	0x00C6, r24
+ 298:	08 95       	ret
+    return UDR0;
+}
+
+void USARTWriteChar(char data)
+{
+    while(!(UCSR0A & (1<<UDRE0)))
+ 29a:	80 91 c0 00 	lds	r24, 0x00C0
+ 29e:	85 ff       	sbrs	r24, 5
+ 2a0:	fc cf       	rjmp	.-8      	; 0x29a <part3+0x60>
+    {
+        //do nothing
+    }
+    UDR0 = data;
+ 2a2:	81 e2       	ldi	r24, 0x21	; 33
+ 2a4:	80 93 c6 00 	sts	0x00C6, r24
+ 2a8:	08 95       	ret
+
+000002aa <main>:
+ * @brief The main function integrating all the activities
+ *
+ * @return int
+ */
+int main(void){
+    init_gpiopins();
+ 2aa:	0e 94 40 00 	call	0x80	; 0x80 <init_gpiopins>
+    while(1){
+        part1();
+ 2ae:	0e 94 44 00 	call	0x88	; 0x88 <part1>
+        part2();
+ 2b2:	0e 94 76 00 	call	0xec	; 0xec <part2>
+        part3();
+ 2b6:	0e 94 1d 01 	call	0x23a	; 0x23a <part3>
+ 2ba:	f9 cf       	rjmp	.-14     	; 0x2ae <main+0x4>
+
+000002bc <_exit>:
+ 2bc:	f8 94       	cli
+
+000002be <__stop_program>:
+ 2be:	ff cf       	rjmp	.-2      	; 0x2be <__stop_program>
