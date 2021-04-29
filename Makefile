@@ -1,4 +1,4 @@
-PROJ_NAME = EmbeddedC
+PROJ_NAME = EmbeddedC_Project
 
 BUILD_DIR = Build
 
