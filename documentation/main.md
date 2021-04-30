@@ -1,1 +1,1 @@
-@mainpage Blinky Example by Bharath G @subpage project_main.c
+@mainpage Seatwarmer Project Simulation by Khubi Thakkar @subpage project_main.c
